@@ -1,0 +1,9 @@
+git
+stow
+neovim
+tree-sitter
+ripgrep
+otf-geist-mono-nerd
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
