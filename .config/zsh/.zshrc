@@ -1,16 +1,30 @@
+#!/usr/bin/env bash
 
 ##
 ### Plugins
 ##
 
-# zsh-autosuggestions
-source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [[ $(uname) == "Darwin" ]]; then
+	# zsh-autosuggestions
+	source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# zsh-syntax-highlighting
-source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+	# zsh-syntax-highlighting
+	source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# zsh-vi-mode
-source $HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+	# zsh-vi-mode
+	source $HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+else
+	# zsh-autosuggestions
+	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+	# zsh-syntax-highlighting
+	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+	# zsh-vi-mode
+	source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+fi
+
+
 # Disable the cursor style feature
 ZVM_CURSOR_STYLE_ENABLED=false
 ZVM_VI_ESCAPE_BINDKEY=ESC
