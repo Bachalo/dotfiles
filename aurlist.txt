@@ -1,1 +1,2 @@
 zsh-vi-mode
+catppuccin-gtk-theme-mocha
