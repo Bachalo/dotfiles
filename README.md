@@ -7,6 +7,8 @@
 
 ## Installation instructions
 
+You can either use the script provided (`./install.sh`) or run the commands listed below manually.
+
 ### Clone
 
 Clone the repo into any directory you like. I prefer the `~/dotfiles` directory as it's easier to entry and easy to remember.
@@ -14,6 +16,15 @@ Clone the repo into any directory you like. I prefer the `~/dotfiles` directory 
 ```sh
 git clone https://github.com/MichalBastrzyk/dotfiles.git ~/dotfiles
 ```
+
+### Use the script provided
+
+You can have a read through it but it's doing only the steps listed down below.
+
+```sh
+./install.sh
+```
+## Or do it all yourself (manually)
 
 ### Get the submodules
 
