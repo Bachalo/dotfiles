@@ -14,4 +14,5 @@ fi
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME:$HOME/.local/bin/:$HOME/.local/share/go/bin:$PATH"
 
+export TERM="alacritty-direct"
 export TERMINAL="alacritty"
