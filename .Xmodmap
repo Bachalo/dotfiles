@@ -1,3 +1,6 @@
 keycode  9  = grave asciitilde grave asciitilde
 keycode  66 = Escape NoSymbol Escape
 clear Lock
+keycode 73 = XF86AudioPrev
+keycode 74 = XF86AudioPlay
+keycode 75 = XF86AudioNext
