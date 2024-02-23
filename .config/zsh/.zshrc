@@ -48,9 +48,11 @@ fi
 
 alias ..="cd .."
 
+alias open="xdg-open"
+
 alias tldrf="tldr -l | fzf --preview 'tldr {1} --color=always' --preview-window=right,70% | xargs tldr"
 
-# Open current gh repo in browser
+# Open current GitHub repository in browser
 alias git-browser='ssh_url=$(git config --get remote.origin.url | sed "s/https:\/\/github.com\///g" | sed "s/git@github.com:\(.*\)\.git/\1/"); open "https://github.com/$ssh_url"'
 
 alias v="nvim"
