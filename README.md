@@ -1,5 +1,12 @@
 # My Dotfiles
 
+## File structure
+
+~/dev/oss
+    - file-uploader
+    - shadcn-table
+    - skateshop
+
 ## Requirements
 
 - GIT (But you obviously have that already 😆)
