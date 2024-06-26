@@ -1,63 +1,68 @@
-#!/usr/bin/env bash
-
-##
-### Plugins
-##
-
-if [[ $(uname) == "Darwin" ]]; then
-	# zsh-autosuggestions
-	source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-	# zsh-syntax-highlighting
-	source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-	# zsh-vi-mode
-	source $HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-else
-	# zsh-autosuggestions
-	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-	# zsh-syntax-highlighting
-	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-	# zsh-vi-mode
-	source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Set the directory where we want to store zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-# Disable the cursor style feature
-ZVM_CURSOR_STYLE_ENABLED=false
-ZVM_VI_ESCAPE_BINDKEY=ESC
-# TODO: Make PageUp and PageDown not enter vi mode
-# TODO: Make shift tab also not enter vi mode
-
-##
-### Other
-##
-
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR="vim"
-else
-  export EDITOR="nvim"
+if [ ! -d "$ZINIT_HOME" ]; then
+  mkdir -p  "$(dirname $ZINIT_HOME)"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
+source "${ZINIT_HOME}/zinit.zsh"
 
-##
-### Aliases
-##
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Add in snippets
+zinit snippet OMZP::git
+zinit snippet OMZP::brew
+zinit snippet OMZP::docker-compose
+zinit snippet OMZP::node
+zinit snippet OMZP::python
+
+# Load completions
+autoload -U compinit && compinit
+
+zinit cdreplay -q
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+# Enable emacs mode
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.local/share/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_find_no_dups
+
+# CaseInsensitive Completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --no-permissions --no-user --no-time --icons $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -la --no-permissions --no-user --no-time --icons $realpath'
+
+# Aliases
 alias ..="cd .."
-
-alias open="xdg-open"
-
-alias tldrf="tldr -l | fzf --preview 'tldr {1} --color=always' --preview-window=right,70% | xargs tldr"
-
-# Open current GitHub repository in browser
-alias git-browser='ssh_url=$(git config --get remote.origin.url | sed "s/https:\/\/github.com\///g" | sed "s/git@github.com:\(.*\)\.git/\1/"); open "https://github.com/$ssh_url"'
-
-alias v="nvim"
-alias vim="nvim"
-alias pn="pnpm"
 
 # ls 
 alias ls="eza -l --icons --git"
@@ -66,25 +71,16 @@ alias ll="eza -l --icons --git"
 alias la="eza -l --icons --git -a"
 alias lsd="eza -l --icons --git -s date"
 
-# git
-alias g="git"
-alias gs="git status"
-alias ga="git add"
-alias gaa="git add -A"
-alias gc="git commit -m "
+alias v="nvim"
 
 alias lg="lazygit"
-alias yadmgui="lazygit --work-tree ~ --git-dir ~/.local/share/yadm/repo.git"
-alias lvim="NVIM_APPNAME=LazyVim nvim"
 
 # yt-dlp
 alias yta="yt-dlp -x --audio-format opus --audio-quality 0 --embed-metadata --embed-thumbnail --sponsorblock-mark all"
-alias ytv="yt-dlp --merge-output-format mkv --audio-quality 0 --embed-metadata --embed-thumbnail --embed-subs --convert-thumbnails jpg --sponsorblock-mark all"
+alias ytv="yt-dlp --merge-output-format mp4 --audio-quality 0 --embed-metadata --embed-thumbnail --embed-subs --convert-thumbnails jpg"
 
 # trash-cli
 alias tr="trash"
-
-# Useful docker containers
 
 # Starts a LAMP stack instance in the current folder
 alias lamp-docker="docker run -p "80:80" -v ${PWD}:/app mattrayner/lamp:latest-2004-php8"
@@ -92,22 +88,11 @@ alias lamp-docker="docker run -p "80:80" -v ${PWD}:/app mattrayner/lamp:latest-2
 # Purge DNS cache
 alias flush-dns-cache="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 
-##
-### Keybinds
-##
+alias test-rtmp-streaming-port="nc -v portquiz.net 1935"
 
-bindkey -s '^t' 'tmux-sessionizer\n'
+# Shell integrations
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
-##
-### Setup version managers
-##
-
+# Node version manager
 eval "$(fnm env --use-on-cd)"
-export PATH="$(pyenv root)/shims:$PATH"
-
-
-##
-### Setup shell prompt
-##
-
-eval "$(starship init zsh)"
